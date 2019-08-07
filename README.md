@@ -6,6 +6,8 @@
 
 Установка: composer require masterflash-ru/emailer
 
+После установки загрузите дамп в базу.
+
 Создается плагин контроллеров Emailer:
 
 ```php
@@ -37,3 +39,23 @@ getSubject():string | Получить тему письма
 setMailFrom(string $mailFrom):void | Установить обратный Email
 getmailFrom():string | Получить Email обратного адреса
 sendEmail(string $message, $toEmails=null):void | отправить письмо, $message - строка HTML письма, $toEmails - получатель/получатели, если пусто, то нужно указать при помощи функции setToEmails
+
+В конфигурации вашего приложения должна быть указана конфигурация коннекта к базе данных 'DefaultSystemDb', например,
+```php
+return [
+    "databases"=>[
+        //соединение с базой + имя драйвера
+        'DefaultSystemDb' => [
+            'driver'=>'MysqlPdo',
+            //"unix_socket"=>"/tmp/mysql.sock",
+            "host"=>"localhost",
+            'login'=>"login",
+            "password"=>"password",
+            "database"=>"simba4",
+            "locale"=>"ru_RU",
+            "character"=>"utf8"
+        ],
+    ],
+
+.....
+];
