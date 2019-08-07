@@ -24,10 +24,11 @@ DROP TABLE IF EXISTS `emailer_tpl`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `emailer_tpl` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` char(255) DEFAULT NULL,
   `sysname` char(127) DEFAULT NULL,
   `tpl` text,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='шаблоны для emailer';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='шаблоны для emailer';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,4 +45,4 @@ CREATE TABLE `emailer_tpl` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-08-07 14:49:39
+-- Dump completed on 2019-08-07 15:31:15

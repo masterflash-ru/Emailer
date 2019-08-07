@@ -17,4 +17,9 @@ return [
             __DIR__ . '/../view',
         ],
     ],
+    /*сетка для админки*/
+    "interface"=>[
+        "emailer"=>__DIR__."/admin.emailer.php",
+    ],
+
 ];
