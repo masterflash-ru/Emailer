@@ -32,7 +32,7 @@ $options - опции, массив, ключи: subject - тема сообще
 
 Вызов | описание
 ------|--------------
-setOptions($options):void | Задать опции, поддерживаются  subject, mailfrom
+setOptions(array $options):void | Задать опции, поддерживаются  subject, mailfrom
 Render($nameOrModel,$values = null):string | Рендер, обрабатывает шаблон-сценарий вывода, $nameOrModel - экземпляр ViewModel или имя шаблона, $values - значения передаваемые в шаблон
 setToEmails($toEmails):void | Задать адрес/адреса получателей, строка или массив
 getToEmails():array | получить массив Email получателей
