@@ -67,4 +67,7 @@ return [
 
 Для включения изображений в HTML письма, следует указывать там абсолютные адреса, 
 использовать помощник View-а ServerUrl(), например, 
+```html
 <img src="<?=$this->ServerUrl($this->$this->basePath("image/pic.jpg"))?>" alt="">
+```
+
