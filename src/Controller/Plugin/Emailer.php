@@ -136,6 +136,7 @@ public function sendEmail(string $message, $toEmails=null)
         if (!is_array($toEmails)){
             $toEmails=[$toEmails];
         }
+    } else {
         $toEmails=$this->getToEmails();
     }
     if (empty($toEmails)){
