@@ -11,7 +11,9 @@
     "prefer-stable": true,
     "require": {
         "php": "^7.1",
-        "masterflash-ru/ado": "^2.0"
+        "masterflash-ru/ado": "^2.0",
+        "zendframework/zend-cache": "^2.7",
+        "zendframework/zend-mail": "^2.8"
     },
     "autoload": {
         "psr-4": {
