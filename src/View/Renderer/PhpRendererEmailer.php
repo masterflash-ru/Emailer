@@ -19,6 +19,9 @@ use Zend\View\Resolver\ResolverInterface as Resolver;
 use Zend\View\Resolver\TemplatePathStack;
 use Zend\View\Variables;
 use Zend\View\Renderer\TreeRendererInterface;
+use ADO\Service\Connection;
+
+use Mf\Emailer\View\Stream;
 
 
 class PhpRendererEmailer implements Renderer, TreeRendererInterface
@@ -45,6 +48,11 @@ class PhpRendererEmailer implements Renderer, TreeRendererInterface
      * @var array
      */
     private $__templates = [];
+    
+    /**
+    * массив шаблонов-сценариев из базы
+    */
+    private $__templates_db = [];
 
     /**
      * Template resolver
@@ -95,9 +103,26 @@ class PhpRendererEmailer implements Renderer, TreeRendererInterface
      */
     public function __construct($config = [])
     {
+        if (!in_array('zend.view', stream_get_wrappers())) {
+            stream_wrapper_register('zend.view', Stream::class);
+        }
         $this->init();
     }
 
+    
+    /**
+    * собственно то чем отличается от стандартной библиотеки, чтение из базы шаблонов
+    * установка соединения с базой и чтение всех шаблонов в память
+    */
+    public function setConnectionADOdb(Connection $connection)
+    {
+        $rs=$connection->Execute("select sysname,tpl from emailer_tpl");
+        while(!$rs->EOF){
+            $this->__templates_db[$rs->Fields->Item["sysname"]->Value]=$rs->Fields->Item["tpl"]->Value;
+            $rs->moveNext();
+        }
+    }
+    
     /**
      * Return the template engine object
      *
@@ -441,7 +466,13 @@ class PhpRendererEmailer implements Renderer, TreeRendererInterface
 
         $this->__content = '';
         while ($this->__template = array_pop($this->__templates)) {
-            $this->__file = $this->resolver($this->__template);
+            if (array_key_exists($this->__template,$this->__templates_db)){
+                //вместо файла будет читаться поток
+                $this->__file ='zend.view://' . $this->__templates_db[$this->__template];
+            } else {
+                //стандартная обработка, ищет файл из стека
+                 $this->__file = $this->resolver($this->__template);
+            }
             if (! $this->__file) {
                 throw new Exception\RuntimeException(sprintf(
                     '%s: Unable to render template "%s"; resolver could not resolve to a file',

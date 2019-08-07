@@ -9,7 +9,7 @@ namespace Mf\Emailer\Controller\Plugin;
 use Zend\Mvc\Controller\Plugin\AbstractPlugin;
 use Mf\Emailer\Exception;
 use Mf\Emailer\View\Renderer\PhpRendererEmailer;
-use Mf\Emailer\View\Resolver\DbResolver;
+use Zend\View\Resolver\AggregateResolver;
 
 use Zend\View\Resolver;
 use Zend\Mail;
@@ -25,7 +25,7 @@ class Emailer extends AbstractPlugin
 {
     /*собственно рендер HTML*/
     protected $renderer;
-    
+
     /**
     * получатели, email
     */
@@ -35,22 +35,20 @@ class Emailer extends AbstractPlugin
     * Тема письма
     */
     protected $Subject="";
-    
-    
+
+
     /**
     * обратный адрес письма
     */
     protected $mailFrom="";
-    
-    
+
 
 public function __construct($config,$ViewHelperManager,$connection) 
 {
     $renderer = new PhpRendererEmailer();
-        
-    $resolver = new DbResolver($connection);
+    $renderer->setConnectionADOdb($connection);
+    $resolver = new AggregateResolver();
     $renderer->setResolver($resolver);
-        
     $renderer->setHelperPluginManager($ViewHelperManager);
     $stack = new Resolver\TemplatePathStack(['script_paths'=>$config['view_manager']['template_path_stack']]);
 
@@ -60,7 +58,6 @@ public function __construct($config,$ViewHelperManager,$connection)
     $this->renderer=$renderer;
     $this->Subject="Сообщение с сайта ".$_SERVER["SERVER_NAME"];
     $this->mailFrom="robot@".$_SERVER["SERVER_NAME"];
-
 }
 
 /*
@@ -69,7 +66,9 @@ public function __construct($config,$ViewHelperManager,$connection)
 * $nameOrModel - строка шаблона (имя) или экземпляр с интерфейсом Zend\View\Model\ModelInterface, обычно это ViewModel
 * $values - если $nameOrModel строка, тогда через $values можно передать переменные в сценарий вывода
 * $toEmails - адрес/адреса получателей (стркоа или массив)
-* $options - разные опции
+* $options - разные опции, ключи массива:
+*   Subject - тема сообщения
+*   mailFrom - обратный адрес письма
 */
 public function __invoke($nameOrModel=null,$values = null, $toEmails=null,array $options=[])
 {
@@ -77,9 +76,24 @@ public function __invoke($nameOrModel=null,$values = null, $toEmails=null,array 
     if (empty($nameOrModel) ){
         return $this;
     }
+    $this->setOptions($options);
     //рендер страницы
     $page=$this->Render($nameOrModel,$values);
     $this->sendEmail($page,$toEmails,$options);
+}
+
+/**
+* установить опции
+*/
+public function setOptions(array $options)
+{
+    $options=array_change_key_case($options,CASE_LOWER);
+    if (!empty($options["subject"])){
+        $this->Subject=$options["subject"];
+    }
+    if (!empty($options["mailfrom"])){
+        $this->mailFrom=$options["mailfrom"];
+    }
 }
 
 /**
@@ -116,7 +130,7 @@ public function getToEmails()
 * $message - HTML письмо
 * $toEmails - получатели, пусто - берется $this->getToEmails();
 */ 
-public function sendEmail($message, $toEmails=null)
+public function sendEmail(string $message, $toEmails=null)
 {
     if (!empty($toEmails)){
         if (!is_array($toEmails)){
@@ -125,9 +139,8 @@ public function sendEmail($message, $toEmails=null)
         $toEmails=$this->getToEmails();
     }
     if (empty($toEmails)){
-        throw new  Exception\EmptyToEmailsException("Список получателей писма пустой");
+        throw new  Exception\EmptyToEmailsException("Список получателей письма пустой");
     }
-    
     $html = new MimePart($message);
     $html->type = Mime::TYPE_HTML;
     $html->charset = 'utf-8';
@@ -143,7 +156,42 @@ public function sendEmail($message, $toEmails=null)
     $mail->setSubject($this->Subject);
     $transport = new Mail\Transport\Sendmail();
     $transport->send($mail);
+}
 
+/**
+* установить тему сообщения
+* Subject - строка темы
+*/
+public function setSubject(string $Subject)
+{
+    $this->Subject=$Subject;
+}
+
+/**
+* получить тему сообщения
+* возвращает строку
+*/
+public function getSubject()
+{
+    return $this->Subject;
 }
     
+/**
+* установить обратный адрес сообщения
+* Subject - строка темы
+*/
+public function setMailFrom(string $mailFrom)
+{
+    $this->mailFrom=$mailFrom;
+}
+
+/**
+* получить обратный сообщения
+* возвращает строку
+*/
+public function getmailFrom()
+{
+    return $this->mailFrom;
+}
+
 }

@@ -20,7 +20,6 @@ class EmailerFactory implements FactoryInterface
         $connection=$container->get('DefaultSystemDb');
         $config=$container->get('config');
         $ViewHelperManager=$container->get('ViewHelperManager');
-        
         return new $requestedName($config,$ViewHelperManager,$connection);
     }
 
