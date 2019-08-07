@@ -2,14 +2,14 @@
 namespace Mf\Emailer;
 
 return [
-    'service_manager' => [
-        'factories' => [//сервисы-фабрики
+    /*плагин контроллера для доступа Emailer - генерация и льправка писем HTML, например, уведомлений*/
+    'controller_plugins' => [
+        'aliases' => [
+            'Emailer' => Controller\Plugin\Emailer::class,
+            'emailer' => Controller\Plugin\Emailer::class,
         ],
-    ],
-
-    //контроллеры
-    'controllers' => [
         'factories' => [
+            Controller\Plugin\Emailer::class => Controller\Plugin\EmailerFactory::class,
         ],
     ],
     'view_manager' => [
