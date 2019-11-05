@@ -21,5 +21,10 @@ return [
     "interface"=>[
         "emailer"=>__DIR__."/admin.emailer.php",
     ],
-
+    "emailer"=>[
+        "config"=>[
+            "database"  =>  "DefaultSystemDb",
+            "cache"     =>  "DefaultSystemCache",
+        ],
+    ],
 ];
