@@ -6,7 +6,7 @@
 
 namespace Mf\Emailer\Controller\Plugin;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 
 
