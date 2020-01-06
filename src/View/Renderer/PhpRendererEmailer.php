@@ -1,6 +1,6 @@
 <?php
 /**
-* рендер скриптов из базы данных, является расширением Zend\View\Renderer\PhpRenderer
+* рендер скриптов из базы данных, является расширением Laminas\View\Renderer\PhpRenderer
 */
 
 namespace Mf\Emailer\View\Renderer;
@@ -8,17 +8,17 @@ namespace Mf\Emailer\View\Renderer;
 
 use ArrayAccess;
 use Traversable;
-use Zend\Filter\FilterChain;
-use Zend\ServiceManager\ServiceManager;
-use Zend\View\Exception;
-use Zend\View\HelperPluginManager;
-use Zend\View\Helper\AbstractHelper;
-use Zend\View\Model\ModelInterface as Model;
-use Zend\View\Renderer\RendererInterface as Renderer;
-use Zend\View\Resolver\ResolverInterface as Resolver;
-use Zend\View\Resolver\TemplatePathStack;
-use Zend\View\Variables;
-use Zend\View\Renderer\TreeRendererInterface;
+use Laminas\Filter\FilterChain;
+use Laminas\ServiceManager\ServiceManager;
+use Laminas\View\Exception;
+use Laminas\View\HelperPluginManager;
+use Laminas\View\Helper\AbstractHelper;
+use Laminas\View\Model\ModelInterface as Model;
+use Laminas\View\Renderer\RendererInterface as Renderer;
+use Laminas\View\Resolver\ResolverInterface as Resolver;
+use Laminas\View\Resolver\TemplatePathStack;
+use Laminas\View\Variables;
+use Laminas\View\Renderer\TreeRendererInterface;
 use ADO\Service\Connection;
 
 use Mf\Emailer\View\Stream;
@@ -103,8 +103,8 @@ class PhpRendererEmailer implements Renderer, TreeRendererInterface
      */
     public function __construct($config = [])
     {
-        if (!in_array('zend.view', stream_get_wrappers())) {
-            stream_wrapper_register('zend.view', Stream::class);
+        if (!in_array('laminas.view', stream_get_wrappers())) {
+            stream_wrapper_register('laminas.view', Stream::class);
         }
         $this->init();
     }
@@ -314,7 +314,7 @@ class PhpRendererEmailer implements Renderer, TreeRendererInterface
         }
         if (! $helpers instanceof HelperPluginManager) {
             throw new Exception\InvalidArgumentException(sprintf(
-                'Helper helpers must extend Zend\View\HelperPluginManager; got type "%s" instead',
+                'Helper helpers must extend Laminas\View\HelperPluginManager; got type "%s" instead',
                 (is_object($helpers) ? get_class($helpers) : gettype($helpers))
             ));
         }
@@ -468,7 +468,7 @@ class PhpRendererEmailer implements Renderer, TreeRendererInterface
         while ($this->__template = array_pop($this->__templates)) {
             if (array_key_exists($this->__template,$this->__templates_db)){
                 //вместо файла будет читаться поток
-                $this->__file ='zend.view://' . $this->__templates_db[$this->__template];
+                $this->__file ='laminas.view://' . $this->__templates_db[$this->__template];
             } else {
                 //стандартная обработка, ищет файл из стека
                  $this->__file = $this->resolver($this->__template);

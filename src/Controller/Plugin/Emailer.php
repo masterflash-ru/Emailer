@@ -6,16 +6,16 @@
 namespace Mf\Emailer\Controller\Plugin;
 
 
-use Zend\Mvc\Controller\Plugin\AbstractPlugin;
+use Laminas\Mvc\Controller\Plugin\AbstractPlugin;
 use Mf\Emailer\Exception;
 use Mf\Emailer\View\Renderer\PhpRendererEmailer;
-use Zend\View\Resolver\AggregateResolver;
+use Laminas\View\Resolver\AggregateResolver;
 
-use Zend\View\Resolver;
-use Zend\Mail;
-use Zend\Mime\Message as MimeMessage;
-use Zend\Mime\Mime;
-use Zend\Mime\Part as MimePart;
+use Laminas\View\Resolver;
+use Laminas\Mail;
+use Laminas\Mime\Message as MimeMessage;
+use Laminas\Mime\Mime;
+use Laminas\Mime\Part as MimePart;
 
 
 /**
@@ -63,7 +63,7 @@ public function __construct($config,$ViewHelperManager,$connection)
 /*
 * быстрый вызов Emailer, если вызвать без параметров, 
 * возвращается сам Emailer (этот экземпляр)
-* $nameOrModel - строка шаблона (имя) или экземпляр с интерфейсом Zend\View\Model\ModelInterface, обычно это ViewModel
+* $nameOrModel - строка шаблона (имя) или экземпляр с интерфейсом Laminas\View\Model\ModelInterface, обычно это ViewModel
 * $values - если $nameOrModel строка, тогда через $values можно передать переменные в сценарий вывода
 * $toEmails - адрес/адреса получателей (стркоа или массив)
 * $options - разные опции, ключи массива:
